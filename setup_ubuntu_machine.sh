@@ -87,15 +87,27 @@ if [ ! -f ~/.tmux.conf ] || [ ! -f ~/.vimrc ]; then
   git clone --recursive git@github.com:ppope/dotfiles.git ~/
 fi
 
-#chrome
-#TODO: Stop letting Google surveil me
+#Personal Programs
+#chrome TODO(phil): Switch to something else, so Google stops surveiling me
 if ! command_exists google-chrome ; then
+  echo "Installing chrome"
   sudo apt -qq install libxss1 libappindicator1 libindicator7
   wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   sudo dpkg -i google-chrome*.deb
   rm google-chrome*.deb
 else
   echo "$(google-chrome --version) already installed"
+fi
+
+
+#sublime
+if ! command_exists subl; then
+  echo "Installing sublime"
+  sudo add-apt-repository ppa:webupd8team/sublime-text-3
+  sudo apt-get -qq update
+  sudo apt-get install sublime-text-installer
+else
+  echo "$(subl -v) already installed"
 fi
 
 echo "Package installation complete!"
