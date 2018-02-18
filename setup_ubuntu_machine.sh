@@ -6,10 +6,10 @@ sudo apt update
 sudo apt install vim git
 
 
-#install latest version of tmux
+#install this version of tmux
 VERSION=2.6
-sudo apt-get -y remove tmux
-sudo apt-get -y install wget tar libevent-dev libncurses-dev
+sudo apt -y remove tmux
+sudo apt -y install wget tar libevent-dev libncurses-dev
 wget https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz
 tar xf tmux-${VERSION}.tar.gz
 rm -f tmux-${VERSION}.tar.gz
@@ -26,7 +26,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 #Dependecies for tmux plugins
 #tmux-yank
-sudo apt-get install xsel 
+sudo apt install xsel
 
 
 #docker
@@ -59,6 +59,7 @@ git clone --recursive git@github.com:ppope/dotfiles.git ~/
 sudo apt install libxss1 libappindicator1 libindicator7
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome*.deb
+rm google-chrome*.deb
 
 
 sudo apt upgrade
