@@ -66,7 +66,7 @@ fi
 if ! command_exists docker ; then
   #https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
   sudo apt remove -y docker docker-engine docker.io
-  sudo apt install \
+  sudo apt install -y \
       apt-transport-https \
       ca-certificates \
       curl \
@@ -77,7 +77,7 @@ if ! command_exists docker ; then
      $(lsb_release -cs) \
      stable"
   sudo apt -qq update
-  sudo apt install docker-ce
+  sudo apt install -y docker-ce
 else
   echo "$(docker --version) already installed"
 fi
@@ -92,7 +92,7 @@ fi
 #chrome TODO(phil): Switch to something else, so Google stops surveiling me
 if ! command_exists google-chrome ; then
   echo "Installing chrome"
-  sudo apt -qq install libxss1 libappindicator1 libindicator7
+  sudo apt -yqq install libxss1 libappindicator1 libindicator7
   wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   sudo dpkg -i google-chrome*.deb
   rm google-chrome*.deb
@@ -104,8 +104,8 @@ fi
 if ! command_exists subl; then
   echo "Installing sublime"
   sudo add-apt-repository ppa:webupd8team/sublime-text-3
-  sudo apt-get -qq update
-  sudo apt-get install sublime-text-installer
+  sudo apt -yqq update
+  sudo apt -y install sublime-text-installer
 else
   echo "$(subl -v) already installed"
 fi
