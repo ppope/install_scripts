@@ -5,7 +5,7 @@ command_exists () {
   type "$1" > /dev/null 2>&1;
 }
 
-install_command_if_not_exists () {
+maybe_install_command () {
   if ! command_exists $1 ; then
     echo "Installing $1..."
     sudo apt install $1
@@ -14,8 +14,21 @@ install_command_if_not_exists () {
   fi
 }
 
-check_and_maybe_add_bashrc () {
-  if grep --quiet "$1" ~/.bashrc; then
+package_exists () {
+  x=$(dpkg -l $1)
+}
+
+maybe_install_package () {
+  if ! package_exists $1 ; then
+    echo "Installing $1..."
+    sudo apt install -y $1
+  else
+    echo "$1 already installed"
+  fi
+}
+
+maybe_add_bashrc () {
+  if ! grep --quiet "$1" ~/.bashrc; then
     echo "Adding $1 to bashrc..."
     echo "$1" >> ~/.bashrc
   fi
@@ -23,6 +36,7 @@ check_and_maybe_add_bashrc () {
 
 echo "Updating packages..."
 sudo apt -qq update
+maybe_install_package build-essential
 
 #dev tools
 #Use vim-gtk for +xterm_clipboard
@@ -33,7 +47,7 @@ else
   echo "vim already installed"
 fi
 
-install_command_if_not_exists git
+maybe_install_package git
 
 if ! command_exists tmux ; then
   #install this version of tmux
@@ -53,11 +67,14 @@ if ! command_exists tmux ; then
   sudo mv tmux-${VERSION} /usr/local/src
 
   #tmux plugin manager
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  if [ ! -d ~/.tmux/plugins/tpm ]; then
+    echo "Cloning tpm"
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  fi
 
   #Dependecies for tmux plugins
   #tmux-yank
-  sudo apt install xsel
+  maybe_install_package xsel
 else
   echo "$(tmux -V) already installed"
 fi
@@ -85,7 +102,9 @@ fi
 #clone my dotfiles
 if [ ! -f ~/.tmux.conf ] || [ ! -f ~/.vimrc ]; then
   echo "Cloning dotfiles"
-  git clone --recursive git@github.com:ppope/dotfiles.git ~/
+  git clone --recursive https://github.com/ppope/dotfiles.git ~/.dotfiles
+  cp ~/.dotfiles/.tmux.conf ~/
+  cp ~/.dotfiles/.vimrc ~/
 fi
 
 #Personal Programs
@@ -114,8 +133,8 @@ echo "Package installation complete!"
 
 #bashrc edits
 echo "Checking bashrc for desired edits..."
-check_and_maybe_add_bashrc "#Additions made by Phil's install script"
-check_and_maybe_add_bashrc "set -o vi"
-check_and_maybe_add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
+maybe_add_bashrc "#Additions made by Phil's install script"
+maybe_add_bashrc "set -o vi"
+maybe_add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
 
 echo "Complete!"
