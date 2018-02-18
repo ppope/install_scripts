@@ -14,8 +14,9 @@ install_command_if_not_exists () {
   fi
 }
 
-add_bashrc () {
+check_and_maybe_add_bashrc () {
   if grep --quiet "$1" ~/.bashrc; then
+    echo "Adding $1 to bashrc..."
     echo "$1" >> ~/.bashrc
   fi
 }
@@ -99,7 +100,6 @@ else
   echo "$(google-chrome --version) already installed"
 fi
 
-
 #sublime
 if ! command_exists subl; then
   echo "Installing sublime"
@@ -113,9 +113,9 @@ fi
 echo "Package installation complete!"
 
 #bashrc edits
-echo "Adding to bashrc..."
-add_bashrc "#Additions made by Phil's install script"
-add_bashrc "set -o vi"
-add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
+echo "Checking bashrc for desired edits..."
+check_and_maybe_add_bashrc "#Additions made by Phil's install script"
+check_and_maybe_add_bashrc "set -o vi"
+check_and_maybe_add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
 
 echo "Complete!"
