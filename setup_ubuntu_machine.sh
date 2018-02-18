@@ -14,12 +14,18 @@ install_command_if_not_exists () {
   fi
 }
 
-echo "Updating packages"
+echo "Updating packages..."
 sudo apt -qq update
 
 #dev tools
 #Use vim-gtk for +xterm_clipboard
-install_command_if_not_exists vim-gtk
+if ! command_exists vim ; then
+  echo "Installing vim..."
+  sudo apt install vim-gtk
+else
+  echo "vim already installed"
+fi
+
 install_command_if_not_exists git
 
 if ! command_exists tmux ; then
@@ -67,12 +73,13 @@ if ! command_exists docker ; then
   sudo apt install docker-ce
 else
   echo "$(docker --version) already installed"
-
+fi
 
 #clone my dotfiles
-if [ ! -f ~/.tmux.conf ] || [! -f ~/.vimrc ]; then
+if [ ! -f ~/.tmux.conf ] || [ ! -f ~/.vimrc ]; then
+  echo "Cloning dotfiles"
   git clone --recursive git@github.com:ppope/dotfiles.git ~/
-
+fi
 
 #chrome
 #TODO: Stop letting Google surveil me
@@ -83,6 +90,7 @@ if ! command_exists google-chrome ; then
   rm google-chrome*.deb
 else
   echo "$(google-chrome --version) already installed"
+fi
 
-echo "Upgrading packages"
-sudo apt -qq upgrade
+echo "Upgrading packages..."
+sudo apt upgrade
