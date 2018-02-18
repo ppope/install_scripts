@@ -14,6 +14,12 @@ install_command_if_not_exists () {
   fi
 }
 
+add_bashrc () {
+  if grep --quiet "$1" ~/.bashrc; then
+    echo "$1" >> ~/.bashrc
+  fi
+}
+
 echo "Updating packages..."
 sudo apt -qq update
 
@@ -92,5 +98,12 @@ else
   echo "$(google-chrome --version) already installed"
 fi
 
-echo "Upgrading packages..."
-sudo apt upgrade
+echo "Package installation complete!"
+
+#bashrc edits
+echo "Adding to bashrc..."
+add_bashrc "#Additions made by Phil's install script"
+add_bashrc "set -o vi"
+add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
+
+echo "Complete!"
