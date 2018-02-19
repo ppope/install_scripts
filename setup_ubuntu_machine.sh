@@ -133,10 +133,11 @@ echo "Package installation complete!"
 
 #bashrc edits
 echo "Checking bashrc for desired edits..."
-maybe_add_bashrc "#Additions made by Phil's install script"
+maybe_add_bashrc "\n#Additions made by Phil's install script"
 maybe_add_bashrc "set -o vi"
 
 maybe_install_package dconf-cli
 maybe_add_bashrc "alias gogh=\"wget -O gogh https://git.io/vQgMr && chmod +x gogh && ./gogh && rm gogh\""
+maybe_add_bashrc "PS1='\u@\h: \W:\$ ' #Shorten command prompt"
 
 echo "Complete!"
